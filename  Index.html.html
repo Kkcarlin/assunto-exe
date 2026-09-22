@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0c0f">
+  <meta name="description" content="ASSUNTO.EXE. Gerador de assuntos para situações em que você definitivamente poderia simplesmente mandar 'oi'.">
+  <title>ASSUNTO.EXE</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0c0f;
+      --panel: #121419;
+      --panel-2: #171920;
+      --border: #292d36;
+      --text: #f2f3f5;
+      --muted: #8e949f;
+      --muted-2: #666c77;
+      --accent: #dce1e8;
+      --accent-text: #101216;
+      --success: #b8e5c4;
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      min-height: 100svh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    button {
+      font: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .app {
+      width: min(100%, 760px);
+      min-height: 100svh;
+      padding:
+        max(24px, env(safe-area-inset-top))
+        clamp(18px, 5vw, 34px)
+        max(22px, env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding-top: 2px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      min-width: 0;
+    }
+
+    .logo {
+      margin: 0;
+      font-size: clamp(1.2rem, 4vw, 1.45rem);
+      line-height: 1;
+      font-weight: 760;
+      letter-spacing: -0.045em;
+    }
+
+    .logo::after {
+      content: "_";
+      color: var(--muted-2);
+      animation: blink 1.15s steps(1) infinite;
+    }
+
+    .tagline {
+      max-width: 560px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: clamp(.86rem, 2.8vw, .96rem);
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+    }
+
+    .counter {
+      flex: 0 0 auto;
+      padding-top: 2px;
+      text-align: right;
+      color: var(--muted-2);
+      font-size: .72rem;
+      line-height: 1.35;
+      white-space: nowrap;
+    }
+
+    .counter strong {
+      display: block;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    main {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(34px, 9vh, 90px) 0 clamp(28px, 7vh, 70px);
+    }
+
+    .question-wrap {
+      position: relative;
+    }
+
+    .question-card {
+      min-height: clamp(280px, 48vh, 390px);
+      padding: clamp(28px, 6vw, 52px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      display: flex;
+      align-items: center;
+      box-shadow: 0 22px 60px rgba(0,0,0,.18);
+      transition: border-color .2s ease, background .2s ease;
+    }
+
+    .question-card:focus-within {
+      border-color: #363b46;
+    }
+
+    .question {
+      margin: 0;
+      width: 100%;
+      font-size: clamp(1.7rem, 6vw, 3.2rem);
+      line-height: 1.09;
+      font-weight: 650;
+      letter-spacing: -.045em;
+      text-wrap: balance;
+    }
+
+    .question.enter {
+      animation: questionIn .34s cubic-bezier(.2,.75,.25,1) both;
+    }
+
+    .actions {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 9px;
+    }
+
+    .btn {
+      min-height: 52px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 0 18px;
+      cursor: pointer;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .035em;
+      transition:
+        transform .12s ease,
+        background .15s ease,
+        border-color .15s ease,
+        color .15s ease;
+    }
+
+    .btn:hover {
+      background: var(--panel-2);
+      border-color: #353a44;
+    }
+
+    .btn:active {
+      transform: translateY(1px) scale(.985);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid #bfc5ce;
+      outline-offset: 3px;
+    }
+
+    .btn-primary {
+      min-height: 58px;
+      background: var(--accent);
+      color: var(--accent-text);
+      border-color: var(--accent);
+      letter-spacing: .045em;
+    }
+
+    .btn-primary:hover {
+      background: #fff;
+      border-color: #fff;
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(.99);
+    }
+
+    .copy-btn.copied {
+      color: var(--success);
+      border-color: #36533f;
+    }
+
+    .hint {
+      min-height: 20px;
+      margin-top: 13px;
+      text-align: center;
+      color: var(--muted-2);
+      font-size: .72rem;
+      letter-spacing: .02em;
+      opacity: 0;
+      transition: opacity .18s ease;
+    }
+
+    .hint.show {
+      opacity: 1;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      color: var(--muted-2);
+      font-size: .7rem;
+      letter-spacing: .02em;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #737984;
+    }
+
+    .footer-note {
+      text-align: right;
+    }
+
+    @keyframes questionIn {
+      from { opacity: 0; transform: translateY(7px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes blink {
+      0%, 48% { opacity: 1; }
+      49%, 100% { opacity: 0; }
+    }
+
+    @media (max-width: 520px) {
+      .app {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      header {
+        gap: 12px;
+      }
+
+      .counter {
+        font-size: .66rem;
+      }
+
+      main {
+        padding-top: 35px;
+        padding-bottom: 25px;
+      }
+
+      .question-card {
+        min-height: min(49svh, 360px);
+        padding: 27px 23px;
+        border-radius: 19px;
+      }
+
+      .question {
+        font-size: clamp(1.72rem, 8vw, 2.35rem);
+      }
+
+      .actions {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .btn-primary {
+        grid-column: 1 / -1;
+        grid-row: 1;
+      }
+
+      .btn {
+        min-height: 48px;
+        padding: 0 13px;
+      }
+
+      footer {
+        font-size: .66rem;
+      }
+    }
+
+    @media (max-height: 700px) and (max-width: 520px) {
+      main {
+        padding-top: 25px;
+        padding-bottom: 18px;
+      }
+
+      .question-card {
+        min-height: 250px;
+      }
+
+      .question {
+        font-size: clamp(1.55rem, 7vw, 2rem);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <h1 class="logo">ASSUNTO.EXE</h1>
+        <p class="tagline">Gerador de assuntos para situações em que você definitivamente poderia simplesmente mandar “oi”.</p>
+      </div>
+      <div class="counter" aria-live="polite">
+        <strong>Assuntos gerados:</strong>
+        <span id="count">0</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="question-wrap" aria-label="Assunto atual">
+        <div class="question-card">
+          <p id="question" class="question" aria-live="polite"></p>
+        </div>
+
+        <div class="actions">
+          <button id="generate" class="btn btn-primary" type="button">GERAR ASSUNTO</button>
+          <button id="other" class="btn" type="button">OUTRO</button>
+          <button id="copy" class="btn copy-btn" type="button">COPIAR</button>
+        </div>
+
+        <div id="hint" class="hint" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer>
+      <span class="status"><span class="status-dot"></span> pronto para uso</span>
+      <span class="footer-note">sem contexto necessário.</span>
+    </footer>
+  </div>
+
+  <script>
+    const QUESTIONS = [
+      // Interessantes e opiniões
+      "Qual opinião sua costuma gerar discussão?",
+      "Qual é uma coisa que você acha superestimada?",
+      "Qual é uma coisa que todo mundo parece gostar e você simplesmente não entende?",
+      "Qual habilidade você gostaria de aprender instantaneamente?",
+      "Qual foi uma opinião sua que mudou completamente com o tempo?",
+      "Qual é uma coisa que você acha que as pessoas complicam demais?",
+      "Qual decisão pequena mudou bastante a sua vida?",
+      "Qual coisa você gostaria que fosse socialmente mais normal?",
+      "Qual é uma coisa que você nunca entendeu por que virou tendência?",
+      "Qual hábito estranho você acha que deveria ser normal?",
+      "Qual é uma coisa simples que deixa seu dia imediatamente melhor?",
+      "Qual é a melhor compra barata que você já fez?",
+      "Qual é uma coisa que você aprendeu tarde demais?",
+      "Qual assunto você consegue ficar horas discutindo?",
+      "Qual é uma regra social que você aboliria se pudesse?",
+      "Qual é uma coisa que você mudou de ideia depois de ouvir outra pessoa?",
+      "Qual talento completamente inútil você gostaria de ter?",
+      "Qual coisa você faria mais se dinheiro e tempo não fossem um problema?",
+      "Qual é uma opinião aparentemente pequena que você defende com força demais?",
+      "Qual invenção você acha que mudou a vida das pessoas mais do que parece?",
+      "Qual é uma coisa que você gostaria de entender melhor?",
+      "Qual é a coisa mais estranha que virou normal para você?",
+      "Qual é uma escolha que você sempre faz do mesmo jeito, mesmo sem saber por quê?",
+      "Qual é uma coisa que parece muito mais difícil do que realmente é?",
+      "Qual é uma coisa que ficou melhor com a idade?",
+      "Qual é uma coisa que era melhor quando você era criança?",
+      "Qual pequeno luxo você acha impossível abandonar?",
+      "Qual é uma coisa que você gostaria de saber fazer sem precisar aprender?",
+      "Qual assunto você acha que as pessoas levam a sério demais?",
+      "Qual é a coisa mais específica que você consegue reconhecer pelo som?",
+      "Qual é uma opinião sua que provavelmente surpreenderia quem te conhece pouco?",
+      "Qual coisa você faria diferente se pudesse recomeçar os últimos cinco anos?",
+      "Qual é uma coisa que você acha que todo mundo deveria experimentar pelo menos uma vez?",
+      "Qual é a melhor maneira de passar uma tarde sem fazer absolutamente nada?",
+      "Qual é uma coisa que você começou a gostar sem entender exatamente quando isso aconteceu?",
+      "Qual é uma qualidade que você valoriza muito em alguém, mas quase nunca fala sobre ela?",
+      "Qual é uma coisa que parece importante até você pensar por cinco minutos?",
+      "Qual é a coisa mais aleatória que você sabe muito sobre?",
+      "Qual é uma tendência que você gostaria de ver desaparecer?",
+      "Qual é uma coisa que você acha que deveria existir, mas ainda não existe?",
+      "Qual é a melhor desculpa que você já inventou para não fazer alguma coisa?",
+
+      // Música, filmes e cultura
+      "Qual música você gostaria de ouvir pela primeira vez de novo?",
+      "Qual música você nunca admite que gosta?",
+      "Qual artista recebe menos crédito do que merece?",
+      "Qual álbum você defenderia mesmo sabendo que provavelmente ninguém concordaria?",
+      "Qual música você acha que eu provavelmente odiaria?",
+      "Qual filme você gostaria de esquecer só para assistir de novo?",
+      "Qual personagem você acha que foi injustiçado pelo público?",
+      "Qual filme todo mundo parece gostar mais do que você?",
+      "Qual final de filme você mudaria?",
+      "Qual filme você defenderia até o fim mesmo se todo mundo falasse que é ruim?",
+      "Qual música sempre melhora quando toca inesperadamente?",
+      "Qual artista você acha que tem uma música muito melhor do que a fama sugere?",
+      "Qual álbum tem uma capa que você acha perfeita?",
+      "Qual filme você acha que envelheceu melhor do que deveria?",
+      "Qual filme envelheceu pior do que você esperava?",
+      "Qual cena de filme ficou na sua cabeça por muito tempo?",
+      "Qual personagem você gostaria de acompanhar em um filme que nunca fizeram?",
+      "Qual música combina perfeitamente com uma cena que nem existe?",
+      "Qual gênero musical você demorou para entender?",
+      "Qual artista você gostaria de ver fazendo um álbum completamente diferente?",
+      "Qual filme você assistiria de novo sem precisar pensar duas vezes?",
+      "Qual trilha sonora você lembra mesmo sem lembrar do filme inteiro?",
+      "Qual música você colocaria em uma cena de perseguição da sua vida?",
+      "Qual obra você acha que foi vítima de expectativas altas demais?",
+      "Qual filme você acha que seria melhor se tivesse terminado dez minutos antes?",
+      "Qual personagem secundário merecia seu próprio filme?",
+      "Qual música te lembra imediatamente uma época específica?",
+      "Qual artista você acha que seria interessante ouvir falando por duas horas?",
+      "Qual filme você recomenda sabendo que provavelmente a pessoa vai estranhar no começo?",
+      "Qual música você acha impossível ouvir sem aumentar o volume?",
+      "Qual obra popular você respeita, mas não consegue gostar?",
+      "Qual filme tem uma ideia melhor do que a execução?",
+      "Qual música você gostaria de apagar da memória para descobrir de novo?",
+      "Qual personagem de filme seria péssimo para dividir uma casa?",
+      "Qual filme tem o melhor primeiro minuto?",
+      "Qual artista você gostaria de ver colaborando com alguém completamente inesperado?",
+      "Qual música seria a pior escolha possível para tocar em uma festa?",
+      "Qual filme te fez olhar para o relógio e perceber que já era muito tarde?",
+      "Qual obra você acha que merecia muito mais atenção?",
+      "Qual música você escutaria enquanto dirige sem destino?",
+
+      // Absurdas / inúteis
+      "Você acha que um peixe sabe que está molhado?",
+      "Qual animal seria mais assustador se tivesse inteligência humana?",
+      "Se os pombos fossem conspiradores, qual seria o objetivo deles?",
+      "Qual objeto da sua casa provavelmente sobreviveria mais tempo se a humanidade desaparecesse amanhã?",
+      "Qual seria a pior música possível para tocar durante um pedido de casamento?",
+      "Se os animais pudessem falar, qual seria o mais inconveniente?",
+      "Qual objeto seria mais difícil de explicar para uma pessoa de 500 anos atrás?",
+      "Se você tivesse que escolher um animal para ser seu segurança particular, qual escolheria?",
+      "Qual seria a pior coisa possível para cair do céu?",
+      "Se todos os humanos desaparecessem amanhã, qual seria a primeira coisa que você acha que sentiria falta?",
+      "Qual animal você acha que teria a pior profissão humana?",
+      "Se uma barata tivesse consciência da própria existência, você acha que ela teria orgulho disso?",
+      "Qual objeto cotidiano ficaria mais estranho se fosse 30% maior?",
+      "Se você pudesse trocar o som de um objeto pelo som de outro, qual combinação seria mais engraçada?",
+      "Qual seria o pior animal para encontrar usando o banheiro à noite?",
+      "Se as nuvens tivessem formatos permanentes, qual formato seria mais inconveniente?",
+      "Qual alimento seria mais suspeito se tivesse personalidade?",
+      "Se você pudesse dar um nome completamente inadequado para um planeta, qual seria?",
+      "Qual animal seria o pior professor de matemática?",
+      "Se as cadeiras pudessem julgar as pessoas, o que você acha que elas criticariam?",
+      "Qual objeto você escolheria para representar a humanidade em um museu alienígena?",
+      "Se sua geladeira pudesse guardar uma única informação sobre você, qual seria?",
+      "Qual seria o pior lugar possível para encontrar uma estátua de tamanho real de você?",
+      "Se os gatos tivessem empregos, qual profissão teria a maior taxa de demissão?",
+      "Qual animal você acha que seria péssimo em guardar um segredo?",
+      "Se você pudesse fazer uma lei completamente inútil, o que ela proibiria?",
+      "Qual seria o pior sabor possível para um refrigerante que ainda fosse vendável?",
+      "Se os espelhos mostrassem uma coisa aleatória em vez do reflexo, o que seria mais assustador aparecer?",
+      "Qual objeto comum seria mais ameaçador se tivesse pernas?",
+      "Se um alienígena pedisse para você provar que a Terra é interessante, o que você mostraria primeiro?",
+      "Qual seria a pior coisa para descobrir que sua casa está secretamente cheia?",
+      "Se todo mundo tivesse que usar um chapéu temático uma vez por semana, qual seria o seu?",
+      "Qual animal você acha que seria o maior fofoqueiro?",
+      "Se pudesse ouvir uma conversa entre dois objetos da sua casa, quais escolheria?",
+      "Qual seria a pior habilidade possível para se ter como superpoder?",
+      "Se as portas tivessem sentimentos, qual tipo de pessoa elas odiariam?",
+      "Qual seria o nome mais absurdo para uma banda que ainda poderia fazer sucesso?",
+      "Se você tivesse que substituir todos os semáforos por animais, quais animais escolheria?",
+      "Qual objeto seria mais engraçado se tivesse uma voz muito grave?",
+      "Se a Lua pudesse responder uma pergunta, qual seria a primeira que você faria?",
+
+      // Filosofia e hipotéticas
+      "Você acha que as pessoas realmente mudam?",
+      "Você preferiria saber toda a verdade sobre o futuro ou continuar sem saber?",
+      "Quanto da personalidade de alguém você acha que é escolha?",
+      "Se você pudesse apagar uma memória, apagaria?",
+      "Você preferiria ter certeza de uma coisa importante ou continuar acreditando nela sem ter certeza?",
+      "Se pudesse conversar durante uma hora com seu eu de dez anos no futuro, o que perguntaria?",
+      "Se ninguém pudesse julgar suas escolhas, o que você faria diferente?",
+      "Você acha que uma pessoa pode conhecer completamente outra pessoa?",
+      "Se você pudesse descobrir a resposta para uma única pergunta sobre o universo, qual seria?",
+      "Você acha que felicidade depende mais do que acontece ou de como a gente interpreta?",
+      "Se você pudesse saber exatamente como vai morrer, gostaria de saber?",
+      "O que você acha que define mais uma pessoa: o que ela faz ou o que ela gostaria de fazer?",
+      "Se ninguém lembrasse de uma coisa que você fez, isso mudaria o valor daquela experiência?",
+      "Você preferiria viver uma vida muito intensa ou uma vida muito tranquila?",
+      "Se pudesse reviver um único dia sem poder alterá-lo, qual escolheria?",
+      "Você acha que conhecer demais alguém pode mudar a forma como você gosta dela?",
+      "Se pudesse remover uma invenção da história, qual escolheria?",
+      "É possível fazer uma escolha totalmente desinteressada?",
+      "Você preferiria ter uma resposta para uma grande dúvida ou dez respostas para dúvidas pequenas?",
+      "Se sua vida tivesse um narrador, você gostaria de ouvir o que ele diria?",
+      "Você acha que nostalgia deixa o passado melhor do que ele realmente foi?",
+      "Se pudesse trocar uma característica sua por outra completamente diferente, qual seria?",
+      "O que você acha que faz uma vida parecer bem vivida?",
+      "Você acha que coincidências são mais interessantes quando não tentamos explicá-las?",
+      "Se pudesse assistir a qualquer momento do passado como uma pessoa invisível, qual escolheria?",
+      "Você preferiria nunca mais sentir medo ou nunca mais sentir arrependimento?",
+      "Se todo mundo pudesse ouvir seus pensamentos por dez minutos, o que aconteceria?",
+      "Você acha que é possível conhecer alguém sem projetar nada sobre essa pessoa?",
+      "Se você pudesse perguntar uma coisa ao universo e recebesse uma resposta perfeitamente confiável, o que perguntaria?",
+      "Você acha que saber demais pode diminuir a graça de alguma coisa?",
+      "Se você tivesse certeza de que ninguém lembraria de você daqui a cem anos, isso mudaria alguma escolha sua?",
+      "Qual é a diferença entre estar sozinho e se sentir sozinho?",
+      "Se pudesse guardar uma única sensação para sempre, qual seria?",
+      "Você acha que uma pessoa é mais definida pelas escolhas que faz ou pelas oportunidades que teve?",
+      "Se sua memória pudesse ser organizada como arquivos, qual pasta você teria medo de abrir?",
+      "Você preferiria saber o que todos pensam de você ou nunca mais se preocupar com isso?",
+      "O que você acha que é mais difícil: mudar de opinião ou admitir que mudou?",
+      "Se pudesse descobrir uma verdade que mudaria completamente sua visão de mundo, você procuraria por ela?",
+      "Você acha que existe uma versão de você que teria feito escolhas completamente diferentes?",
+
+      // Histórias e experiências
+      "Qual foi a situação mais aleatória que já aconteceu com você?",
+      "Qual foi a maior vergonha que hoje você consegue achar engraçada?",
+      "Qual foi a coisa mais impulsiva que você já fez?",
+      "Qual foi a melhor decisão que você tomou sem pensar muito?",
+      "Qual foi a coisa mais estranha que alguém já te perguntou?",
+      "Qual foi a viagem mais memorável que você já fez?",
+      "Qual foi a última coisa que te fez rir de verdade?",
+      "Qual foi a situação em que você mais pensou “isso não pode estar acontecendo”?",
+      "Qual foi a coincidência mais absurda que já aconteceu com você?",
+      "Qual foi a mentira mais inútil que você já contou?",
+      "Qual foi a coisa mais inesperada que já melhorou seu dia?",
+      "Qual foi o melhor conselho que você recebeu por acaso?",
+      "Qual foi a situação em que você tomou uma decisão completamente no improviso?",
+      "Qual foi a coisa mais estranha que você já encontrou por acaso?",
+      "Qual foi a primeira vez que você percebeu que estava ficando adulto?",
+      "Qual foi a situação mais engraçada em que você não conseguiu parar de rir?",
+      "Qual foi o lugar mais inesperado onde você já fez uma amizade?",
+      "Qual foi a coisa mais corajosa que você já fez sem perceber na hora?",
+      "Qual foi o maior ‘plot twist’ que uma situação comum já teve na sua vida?",
+      "Qual foi a coisa mais inútil que você já aprendeu e acabou usando?",
+      "Qual foi a última vez que você fez alguma coisa pela primeira vez?",
+      "Qual foi a situação mais estranha que começou como um dia completamente normal?",
+      "Qual foi a melhor surpresa que você já recebeu?",
+      "Qual foi a coisa mais aleatória que você já fez porque alguém te convenceu?",
+      "Qual foi uma memória que você só percebeu que era importante anos depois?",
+      "Qual foi o pior conselho que você seguiu?",
+      "Qual foi a maior mudança de planos que acabou dando certo?",
+      "Qual foi a situação mais desconfortável que hoje virou uma boa história?",
+      "Qual foi a coisa mais engraçada que aconteceu em uma viagem?",
+      "Qual foi a última coisa que te fez pensar ‘eu precisava ter filmado isso’?",
+      "Qual foi o encontro mais improvável que você já teve com alguém?",
+      "Qual foi a coisa mais inesperada que você descobriu sobre alguém conhecido?",
+      "Qual foi a maior sorte aleatória que já aconteceu com você?",
+      "Qual foi uma coisa que você fez uma vez e decidiu que nunca mais faria?",
+      "Qual foi a lembrança de infância mais específica que você ainda consegue visualizar?",
+      "Qual foi a situação em que você mais improvisou e, por algum motivo, funcionou?",
+      "Qual foi o elogio mais inesperado que você já recebeu?",
+      "Qual foi a coisa mais estranha que você já presenciou em público?",
+      "Qual foi uma experiência que você achou que seria ruim e acabou adorando?",
+      "Qual história sua sempre volta quando alguém pergunta sobre uma situação absurda?",
+
+      // Potencial de flerte, minoria
+      "Qual é uma coisa que faz uma pessoa ficar imediatamente mais interessante?",
+      "Qual é o melhor tipo de convite que alguém pode fazer?",
+      "Você acha que química dá para perceber rápido?",
+      "Qual é a diferença entre achar alguém bonito e realmente sentir atração?",
+      "Qual detalhe pequeno pode mudar completamente a primeira impressão sobre alguém?",
+      "O que torna uma conversa inesperadamente boa?",
+      "Você acha que uma pessoa pode ficar mais atraente depois de conversar bastante com ela?",
+      "Qual é o tipo de humor que mais facilmente faz alguém parecer interessante?",
+      "Você acha que olhar diz alguma coisa ou a gente inventa significado depois?",
+      "Qual é a coisa mais charmosa que alguém pode fazer sem perceber?"
+    ];
+
+    const questionEl = document.getElementById("question");
+    const countEl = document.getElementById("count");
+    const hintEl = document.getElementById("hint");
+    const generateBtn = document.getElementById("generate");
+    const otherBtn = document.getElementById("other");
+    const copyBtn = document.getElementById("copy");
+
+    let deck = [];
+    let currentQuestion = "";
+    let generatedCount = 0;
+    let lastQuestion = "";
+
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function refillDeck() {
+      deck = shuffle(QUESTIONS);
+
+      // Evita que o primeiro item de um novo ciclo seja igual ao último.
+      if (deck.length > 1 && deck[0] === lastQuestion) {
+        [deck[0], deck[1]] = [deck[1], deck[0]];
+      }
+    }
+
+    function nextQuestion() {
+      if (deck.length === 0) refillDeck();
+
+      let next = deck.pop();
+
+      // Proteção extra contra repetição imediata, inclusive em futuras alterações do banco.
+      if (next === currentQuestion && deck.length > 0) {
+        const alternativeIndex = deck.findIndex(q => q !== currentQuestion);
+        if (alternativeIndex >= 0) {
+          [next, deck[alternativeIndex]] = [deck[alternativeIndex], next];
+        }
+      }
+
+      currentQuestion = next;
+      lastQuestion = next;
+      generatedCount++;
+      countEl.textContent = generatedCount;
+
+      questionEl.classList.remove("enter");
+      void questionEl.offsetWidth;
+      questionEl.textContent = currentQuestion;
+      questionEl.classList.add("enter");
+
+      copyBtn.classList.remove("copied");
+      copyBtn.textContent = "COPIAR";
+      hideHint();
+    }
+
+    function showHint(message) {
+      hintEl.textContent = message;
+      hintEl.classList.add("show");
+    }
+
+    function hideHint() {
+      hintEl.classList.remove("show");
+      window.clearTimeout(hideHint.timer);
+    }
+
+    function copyQuestion() {
+      if (!currentQuestion) return;
+
+      const done = () => {
+        copyBtn.classList.add("copied");
+        copyBtn.textContent = "COPIADO";
+        showHint("Copiado.");
+        window.clearTimeout(copyQuestion.timer);
+        copyQuestion.timer = window.setTimeout(() => {
+          copyBtn.classList.remove("copied");
+          copyBtn.textContent = "COPIAR";
+          hideHint();
+        }, 1800);
+      };
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(currentQuestion).then(done).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+
+      function fallbackCopy() {
+        const area = document.createElement("textarea");
+        area.value = currentQuestion;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        area.select();
+        try {
+          document.execCommand("copy");
+          done();
+        } catch {
+          showHint("Selecione e copie a pergunta.");
+        }
+        area.remove();
+      }
+    }
+
+    generateBtn.addEventListener("click", nextQuestion);
+    otherBtn.addEventListener("click", nextQuestion);
+    copyBtn.addEventListener("click", copyQuestion);
+
+    // Começa com uma pergunta carregada. O contador conta assuntos exibidos.
+    refillDeck();
+    nextQuestion();
+  </script>
+</body>
+</html>
